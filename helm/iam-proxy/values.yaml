@@ -1,0 +1,55 @@
+# Default values for iam-proxy
+replicaCount: 1
+
+image:
+  repository: ghcr.io/kotaicode/iam-proxy
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  # Example IRSA annotation:
+  # eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/YOUR_ROLE_NAME
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+config:
+  port: 8080
+  logLevel: info
+  securityToken: ""  # Optional: Bearer token for authentication
+  allowedIPs: []     # Optional: List of allowed IP addresses
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {} 

@@ -1,0 +1,15 @@
+apiVersion: v2
+name: iam-proxy
+description: A lightweight proxy server that exposes AWS IAM credentials from a Kubernetes pod using IRSA
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+maintainers:
+  - name: Kotaicode
+    url: https://github.com/kotaicode
+keywords:
+  - aws
+  - iam
+  - credentials
+  - proxy
+  - irsa 

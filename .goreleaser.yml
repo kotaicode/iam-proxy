@@ -1,0 +1,66 @@
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: iam-proxy
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    main: ./cmd/main.go
+    binary: iam-proxy
+    dir: .
+
+dockers:
+  - image_templates:
+      - ghcr.io/kotaicode/iam-proxy:{{ .Version }}-amd64
+      - ghcr.io/kotaicode/iam-proxy:latest-amd64
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--push"
+    extra_files:
+      - Dockerfile
+      - go.mod
+      - go.sum
+      - cmd/
+      - internal/
+    goos: linux
+    goarch: amd64
+
+  - image_templates:
+      - ghcr.io/kotaicode/iam-proxy:{{ .Version }}-arm64
+      - ghcr.io/kotaicode/iam-proxy:latest-arm64
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/arm64"
+      - "--push"
+    extra_files:
+      - Dockerfile
+      - go.mod
+      - go.sum
+      - cmd/
+      - internal/
+    goos: linux
+    goarch: arm64
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^ci:'
+      - Merge pull request
+      - Merge branch
+
+release:
+  github:
+    owner: kotaicode
+    name: iam-proxy
+  prerelease: auto 
