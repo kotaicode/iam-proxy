@@ -63,6 +63,49 @@ docker run -p 8080:8080 \
   ghcr.io/kotaicode/iam-proxy:latest-arm64
 ```
 
+### Quick Start Example
+
+Here's a practical example of setting up and using the IAM proxy:
+
+1. Create a service account with the desired IAM role:
+
+```yaml
+# serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: iam-proxy
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/YOUR_ROLE_NAME
+```
+
+```bash
+kubectl apply -f serviceaccount.yaml
+```
+
+2. Run the proxy pod with the service account:
+
+```bash
+kubectl run iam-proxy --rm -i --tty \
+  --image ghcr.io/kotaicode/iam-proxy:latest-amd64 \
+  --serviceaccount=iam-proxy \
+  --port=8080
+```
+
+3. Forward the pod's port to your local machine:
+
+```bash
+kubectl port-forward pod/iam-proxy 8080:8080
+```
+
+4. Test the credentials endpoint:
+
+```bash
+curl -s http://localhost:8080/credentials
+```
+
+You should see the temporary AWS credentials in the response. These credentials will have the permissions associated with the IAM role specified in the service account annotation.
+
 ### Configuration
 
 Environment variables:
