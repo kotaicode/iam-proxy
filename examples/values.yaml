@@ -1,0 +1,27 @@
+# Example values for iam-proxy
+replicaCount: 1
+
+image:
+  repository: ghcr.io/kotaicode/iam-proxy
+  tag: "latest"
+
+serviceAccount:
+  create: true
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/YOUR_ROLE_NAME
+
+config:
+  port: 8080
+  logLevel: info
+  securityToken: "your-secure-token"  # Optional
+  allowedIPs:  # Optional
+    - "10.0.0.0/8"
+    - "172.16.0.0/12"
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi 

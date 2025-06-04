@@ -13,47 +13,45 @@ A lightweight proxy server that exposes AWS IAM credentials from a Kubernetes po
 - Graceful shutdown
 - Minimal container image
 
-## Usage
+## Installation
 
-### Running in Kubernetes
+### Using Helm
 
-1. Deploy the proxy with IRSA configuration:
+1. Add the Helm repository:
+```bash
+helm repo add kotaicode https://kotaicode.github.io/iam-proxy
+helm repo update
+```
 
+2. Create a values file (e.g., `my-values.yaml`):
 ```yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: iam-proxy
+serviceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/YOUR_ROLE_NAME
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: iam-proxy
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: iam-proxy
-  template:
-    metadata:
-      labels:
-        app: iam-proxy
-    spec:
-      serviceAccountName: iam-proxy
-      containers:
-      - name: iam-proxy
-        image: ghcr.io/kotaicode/iam-proxy:latest
-        ports:
-        - containerPort: 8080
-        env:
-        - name: PORT
-          value: "8080"
-        - name: SECURITY_TOKEN
-          value: "your-secure-token"  # Optional
-        - name: ALLOWED_IPS
-          value: "10.0.0.0/8,172.16.0.0/12"  # Optional
+
+config:
+  securityToken: "your-secure-token"  # Optional
+  allowedIPs:  # Optional
+    - "10.0.0.0/8"
+    - "172.16.0.0/12"
+```
+
+3. Install the chart:
+```bash
+helm install iam-proxy kotaicode/iam-proxy -f my-values.yaml
+```
+
+For more configuration options, see the [values.yaml](helm/iam-proxy/values.yaml) file.
+
+### Using Docker
+
+You can also run the proxy directly using Docker:
+
+```bash
+docker run -p 8080:8080 \
+  -e SECURITY_TOKEN=your-secure-token \
+  -e ALLOWED_IPS=10.0.0.0/8,172.16.0.0/12 \
+  ghcr.io/kotaicode/iam-proxy:latest
 ```
 
 ### Configuration
@@ -82,6 +80,7 @@ region = eu-central-1
 - Go 1.21 or later
 - Docker
 - Task (optional, for using Taskfile)
+- Helm (for local development)
 
 ### Building
 
@@ -142,6 +141,24 @@ This will:
 - Build binaries for multiple platforms
 - Create Docker images
 - Create a GitHub release with all artifacts
+
+### Local Helm Development
+
+1. Install dependencies:
+```bash
+helm dependency update helm/iam-proxy
+```
+
+2. Test the chart:
+```bash
+helm lint helm/iam-proxy
+helm template iam-proxy helm/iam-proxy -f examples/values.yaml
+```
+
+3. Install locally:
+```bash
+helm install iam-proxy helm/iam-proxy -f examples/values.yaml
+```
 
 ## Security Considerations
 
