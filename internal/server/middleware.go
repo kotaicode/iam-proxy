@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/yourorg/iam-credentials-proxy/internal/config"
+	"github.com/kotaicode/iam-proxy/internal/config"
 )
 
 func AuthMiddleware(cfg *config.Config, next http.Handler) http.Handler {

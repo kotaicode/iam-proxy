@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/yourorg/iam-credentials-proxy/internal/config"
-	"github.com/yourorg/iam-credentials-proxy/internal/server"
+	"github.com/kotaicode/iam-proxy/internal/config"
+	"github.com/kotaicode/iam-proxy/internal/server"
 )
 
 func main() {

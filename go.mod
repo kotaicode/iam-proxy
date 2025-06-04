@@ -1,4 +1,4 @@
-module github.com/yourorg/iam-credentials-proxy
+module github.com/kotaicode/iam-proxy
 
 go 1.21
 

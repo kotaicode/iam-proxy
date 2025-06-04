@@ -1,5 +1,8 @@
 version: '3'
 
+vars:
+  DOCKER_IMAGE: ghcr.io/kotaicode/iam-proxy
+
 tasks:
   deps:
     desc: Install dependencies
@@ -25,7 +28,12 @@ tasks:
   docker:
     desc: Build Docker image
     cmds:
-      - docker build -t yourorg/iam-proxy:latest .
+      - docker build -t {{.DOCKER_IMAGE}}:latest .
+
+  docker-push:
+    desc: Push Docker image to GitHub Container Registry
+    cmds:
+      - docker push {{.DOCKER_IMAGE}}:latest
 
   clean:
     desc: Clean build artifacts
@@ -38,6 +46,22 @@ tasks:
     cmds:
       - go vet ./...
       - go fmt ./...
+
+  release-dry-run:
+    desc: Run goreleaser in dry-run mode
+    cmds:
+      - goreleaser release --snapshot --clean
+
+  release:
+    desc: Create a new release (requires VERSION env var)
+    cmds:
+      - |
+        if [ -z "{{.VERSION}}" ]; then
+          echo "VERSION environment variable is required"
+          exit 1
+        fi
+      - git tag v{{.VERSION}}
+      - git push origin v{{.VERSION}}
 
   all:
     desc: Run all checks and build

@@ -44,7 +44,7 @@ spec:
       serviceAccountName: iam-proxy
       containers:
       - name: iam-proxy
-        image: yourorg/iam-proxy:latest
+        image: ghcr.io/kotaicode/iam-proxy:latest
         ports:
         - containerPort: 8080
         env:
@@ -77,23 +77,71 @@ region = eu-central-1
 
 ## Development
 
+### Prerequisites
+
+- Go 1.21 or later
+- Docker
+- Task (optional, for using Taskfile)
+
 ### Building
 
 ```bash
-go build -o iam-proxy ./cmd/main.go
+# Using Task
+task build
+
+# Or manually
+go build -o bin/iam-proxy ./cmd/main.go
 ```
 
 ### Running Locally
 
 ```bash
-./iam-proxy
+# Using Task
+task run
+
+# Or manually
+./bin/iam-proxy
 ```
 
-### Building Docker Image
+### Testing
 
 ```bash
-docker build -t yourorg/iam-proxy:latest .
+task test
 ```
+
+### Docker
+
+```bash
+# Build image
+task docker
+
+# Push to GitHub Container Registry
+task docker-push
+```
+
+### Creating a Release
+
+1. Install GoReleaser:
+```bash
+brew install goreleaser
+```
+
+2. Test the release process:
+```bash
+task release-dry-run
+```
+
+3. Create a new release:
+```bash
+VERSION=0.1.0 task release
+```
+
+This will:
+- Create and push a version tag
+- Trigger GitHub Actions workflow
+- Build binaries for multiple platforms
+- Create Docker images
+- Create a GitHub release with all artifacts
 
 ## Security Considerations
 

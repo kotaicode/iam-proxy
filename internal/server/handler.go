@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/yourorg/iam-credentials-proxy/internal/credentials"
+	"github.com/kotaicode/iam-proxy/internal/credentials"
 )
 
 func CredentialsHandler(w http.ResponseWriter, r *http.Request) {
