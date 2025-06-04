@@ -1,0 +1,44 @@
+version: '3'
+
+tasks:
+  deps:
+    desc: Install dependencies
+    cmds:
+      - go mod download
+      - go mod tidy
+
+  build:
+    desc: Build the application
+    cmds:
+      - go build -o bin/iam-proxy ./cmd/main.go
+
+  run:
+    desc: Run the application locally
+    cmds:
+      - go run ./cmd/main.go
+
+  test:
+    desc: Run tests
+    cmds:
+      - go test -v ./...
+
+  docker:
+    desc: Build Docker image
+    cmds:
+      - docker build -t yourorg/iam-proxy:latest .
+
+  clean:
+    desc: Clean build artifacts
+    cmds:
+      - rm -rf bin/
+      - go clean
+
+  lint:
+    desc: Run linter
+    cmds:
+      - go vet ./...
+      - go fmt ./...
+
+  all:
+    desc: Run all checks and build
+    deps: [deps, lint, test, build] 
